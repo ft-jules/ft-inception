@@ -24,14 +24,13 @@ down:
 logs:
 	@$(DOCKER_COMPOSE) logs -f
 
+# only this project's containers, images and volumes, never the rest of the machine
 clean: down
-	@$(DOCKER_COMPOSE) down --volumes
-	@docker system prune -af
+	@$(DOCKER_COMPOSE) down --volumes --rmi all
 
 fclean: clean
 	@sudo rm -rf $(VOLUMES_PATH)/wordpress
 	@sudo rm -rf $(VOLUMES_PATH)/mariadb
-	@docker volume rm $$(docker volume ls -q) 2>/dev/null || true
 
 clean-hosts:
 	@echo "Removing domain from /etc/hosts..."
